@@ -34,6 +34,11 @@ app.use(
 	})
 );
 
+app.use((req, res, next) => {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	next();
+});
+
 // Cartesi send input endpoint
 app.post('/send-input', async (req, res) => {
 	const data = req.body.data;
