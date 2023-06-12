@@ -28,7 +28,11 @@ moduleManager.init();
 app.use(express.json());
 
 // Middleware for CORS
-app.use(cors());
+app.use(
+	cors({
+		origin: '*',
+	})
+);
 
 // Cartesi send input endpoint
 app.post('/send-input', async (req, res) => {
