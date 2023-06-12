@@ -12,6 +12,7 @@ const PASSWORD = String(process.env.BROKER_PASSWORD);
 export default class MQTT extends Module {
 	private client: Client;
 	private callback!: (topic: string, payload: Buffer) => void;
+	private latestData: any = {};
 
 	constructor() {
 		super('MQTT');
@@ -21,10 +22,25 @@ export default class MQTT extends Module {
 			password: PASSWORD,
 			protocol: 'mqtts',
 		});
+
+		this.latestData = {
+			temperature: 0,
+			humidity: 0,
+		};
+	}
+
+	public getLatestData(): any {
+		return this.latestData;
 	}
 
 	private messageHandler(topic: string, payload: Buffer, _packet: IPublishPacket): void {
-		console.log(`[MQTT] Message received on topic ${topic}: ${payload.toString()}`);
+		//console.log(`[MQTT] Message received on topic ${topic}: ${payload.toString()}`);
+
+		if (topic === 'temperature') {
+			this.latestData.temperature = payload.toString();
+		} else if (topic === 'humidity') {
+			this.latestData.humidity = payload.toString();
+		}
 
 		if (this.callback) {
 			this.callback(topic, payload);
@@ -58,7 +74,7 @@ export default class MQTT extends Module {
 	public init(): void {
 		this.client.on('connect', this.connectHandler);
 		this.client.on('error', this.errorHandler);
-		this.client.on('message', this.messageHandler);
+		this.client.on('message', this.messageHandler.bind(this));
 	}
 
 	public destroy(): void {

@@ -35,6 +35,11 @@ app.post('/send-input', async (req, res) => {
 	res.send('Input sent');
 });
 
+// Get latest data endpoint
+app.get('/latest-data', async (req, res) => {
+	res.send(mqttModule.getLatestData());
+});
+
 // Start server, the "+" is to convert the string to a number ( Trick to avoid type errors )
 // You can find more info about this here: https://stackoverflow.com/questions/14667713/how-to-convert-a-string-to-number-in-typescript
 app.listen(+PORT, HOST, () => {
