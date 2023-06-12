@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
 import ModuleManager, { MQTT, Ethers, CartesiDapp } from './modules';
-
+import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -26,6 +26,9 @@ moduleManager.init();
 
 // Middleware for parsing JSON request body
 app.use(express.json());
+
+// Middleware for CORS
+app.use(cors());
 
 // Cartesi send input endpoint
 app.post('/send-input', async (req, res) => {
